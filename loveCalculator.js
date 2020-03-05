@@ -19,7 +19,7 @@ function loveCalculator(name1, name2) {
     customMessage = "HUBBA - HUBBA";
     } else if (compatibility < 80) {
     customMessage = "HOT TAMALE";
-    } else if (compatibility < 100) {
+    } else if (compatibility <= 100) {
     customMessage = "CASANOVA";
     }
 
