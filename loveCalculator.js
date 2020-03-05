@@ -8,7 +8,23 @@ function loveCalculator(name1, name2) {
     var n = Math.random();
     var scale = n * 100; 
     var compatibility = Math.floor(scale + 1);
-    alert(name1 + " and " + name2 + " are " + compatibility + "% compatible.");
+
+    if (compatibility < 16) {
+    customMessage = "COLD FISH";
+    } else if (compatibility < 33) {
+    customMessage = "LOVE LORN";
+    } else if (compatibility < 48) {
+    customMessage = "LUKE WARM";
+    } else if (compatibility < 64) {
+    customMessage = "HUBBA - HUBBA";
+    } else if (compatibility < 80) {
+    customMessage = "HOT TAMALE";
+    } else if (compatibility < 100) {
+    customMessage = "CASANOVA";
+    }
+
+
+    alert(name1 + " and " + name2 + " are " + compatibility + "% compatible. " + customMessage);
 }
 
 loveCalculator(input1, input2);
