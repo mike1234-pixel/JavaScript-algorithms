@@ -1,0 +1,42 @@
+function sumFibs(num) {
+ 
+    var sequence = [];
+    var secondSequence = [];
+    var total = 0;
+  
+    //Write your code here:
+    if (num == 1) {
+      sequence.push(0); // works
+    } else if (num == 2) {
+      sequence.push(0,1);
+    } else if (num > 2) { // works
+
+      sequence.push(0,1); // works
+
+      for (var i = 0; i < num; i++) {
+
+        var lastTwo = sequence.slice(-2);
+        var pushValue = lastTwo.reduce((a,b) => a + b);
+        sequence.push(pushValue);
+            
+      }
+    }
+    // STEP ONE - HAVE FIBONNACCI SEQUENCE 
+
+for (var i = 0; i < sequence.length; i++) {
+  if (sequence[i] < num) {
+    secondSequence.push(sequence[i]);
+  }
+}
+
+    // STEP TWO, SUM ODD NUMS IN THAT SEQUENCE
+for (var i = 0; i < secondSequence.length; i++) {
+  if (secondSequence[i] % 2 !== 0) {
+    total += secondSequence[i];
+  }
+}
+console.log(total);
+return total;
+}
+
+sumFibs(75025); 
