@@ -3,6 +3,24 @@ function checkCashRegister(price, cash, cid) {
   console.log(`CHANGE OWED: ${changeOwed}`);
   var change = [];
 
+  // cash in drawer
+  var cashInDrawer = 0; // 121.30
+
+  for (var i = 0; i < cid.length; i++) {
+    if (i % 2 == 0) {
+      cashInDrawer += cid[i][1];
+    }
+  }
+  cashInDrawer = cashInDrawer.toFixed(2);
+
+  console.log(`changeOwed: ${changeOwed}, cashInDrawer: ${cashInDrawer}, cid: ${cid}`)
+
+  if (cashInDrawer < changeOwed) {
+    return { status: "INSUFFICIENT_FUNDS", change: [] };
+  } else if (cashInDrawer == changeOwed.toFixed(2)) {
+    return { status: "CLOSED", change: cid };
+  }
+ 
   // create function that converts result to correct format.
 
   // create new array translating denomination to number
@@ -96,28 +114,9 @@ function formatResult(change) {
 
 // invoke
 
-checkCashRegister(19.5, 20, [
-  ["PENNY", 1.01],
-  ["NICKEL", 2.05],
-  ["DIME", 3.1],
-  ["QUARTER", 4.25],
-  ["ONE", 90],
-  ["FIVE", 55],
-  ["TEN", 20],
-  ["TWENTY", 60],
-  ["ONE HUNDRED", 100],
-]);
+// Return {status: "INSUFFICIENT_FUNDS", change: []} if cash-in-drawer is less than the change due, or if you cannot return the exact change.
 
-checkCashRegister(3.26, 100, [
-  ["PENNY", 1.01],
-  ["NICKEL", 2.05],
-  ["DIME", 3.1],
-  ["QUARTER", 4.25],
-  ["ONE", 90],
-  ["FIVE", 55],
-  ["TEN", 20],
-  ["TWENTY", 60],
-  ["ONE HUNDRED", 100],
-]);
+// Return {status: "CLOSED", change: [...]} with cash-in-drawer as the value for the key change if it is equal to the change due.
 
+checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]])
 
