@@ -16,18 +16,8 @@ function checkCashRegister(price, cash, cid) {
   cidNumberDenoms[6][0] = 10.0;
   cidNumberDenoms[7][0] = 20.0;
   cidNumberDenoms[8][0] = 100.0;
-  // cidNumberDenoms
-  //   [ [ 0.01, 1.01 ],
-  //   [ 0.05, 2.05 ],
-  //   [ 0.1, 3.1 ],
-  //   [ 0.25, 4.25 ],
-  //   [ 1, 90 ],
-  //   [ 5, 55 ],
-  //   [ 10, 20 ],
-  //   [ 20, 60 ],
-  //   [ 100, 100 ] ]
 
-  // iterate forwards through the cash drawer
+  // iterate backwards through the cash drawer
   for (var i = cidNumberDenoms.length - 1; i >= 0; i--) {
     // ok
     ///////////////////////////////////////////////////////////////////////////
@@ -37,18 +27,74 @@ function checkCashRegister(price, cash, cid) {
     while (denomination <= changeOwed && cashInSlot > 0) {
       changeOwed -= denomination;
       changeOwed = changeOwed.toFixed(2);
-      console.log(`CHANGEOWED IS NOW ${changeOwed}`);
       cashInSlot -= denomination;
-      console.log(`CASHINSLOT IS NOW ${cashInSlot}`);
       change.push(denomination);
     }
   }
   console.log(
-    `RESULT:: TOTAL ${change.reduce((a, b) => a + b)}, CHANGE ARRAY:${change}`
+    `RESULT:: TOTAL ${change
+      .reduce((a, b) => a + b)
+      .toFixed(2)}, CHANGE ARRAY:${change}`
   );
+  var formattedResult = formatResult(change);
+  console.log({ status: "OPEN", change: formattedResult });
+  return { status: "OPEN", change: formattedResult };
 }
 
-// cidNumberDenoms[i][0] == = all denominations equal to or less than change owed
+function formatResult(change) {
+  // change = [20,20,20,10,10,5,5,5,1,0.25,0.25,0.1,0.1,0.01,0.01,0.01,0.01]
+
+  var twenty = 0;
+  var ten = 0;
+  var five = 0;
+  var one = 0;
+  var quarter = 0;
+  var dime = 0;
+  var nickel = 0;
+  var penny = 0;
+
+  for (var i = 0; i < change.length; i++) {
+    if (change[i] === 20) {
+      twenty += change[i];
+    } else if (change[i] === 10) {
+      ten += change[i];
+    } else if (change[i] === 5) {
+      five += change[i];
+    } else if (change[i] === 1) {
+      one += change[i];
+    } else if (change[i] === 0.25) {
+      quarter += change[i];
+    } else if (change[i] === 0.1) {
+      dime += change[i];
+    } else if (change[i] === 0.05) {
+      nickel += change[i];
+    } else if (change[i] === 0.01) {
+      penny += change[i];
+    }
+  }
+  var result1 = [
+    ["TWENTY", twenty],
+    ["TEN", ten],
+    ["FIVE", five],
+    ["ONE", one],
+    ["QUARTER", quarter],
+    ["DIME", dime],
+    ["NICKEL", nickel],
+    ["PENNY", penny],
+  ];
+
+  var result2 = [];
+  // filter - only include results that are not 0 into final result
+  for (var i = 0; i < result1.length; i++) {
+    if (result1[i][1] !== 0) {
+      result2.push(result1[i]);
+    }
+  }
+
+  return result2;
+}
+
+// invoke
 
 checkCashRegister(19.5, 20, [
   ["PENNY", 1.01],
@@ -74,28 +120,4 @@ checkCashRegister(3.26, 100, [
   ["ONE HUNDRED", 100],
 ]);
 
-// the cash drawer is put into the function - the func is a cash register
-// the cash register calculates what change should be given, and what coins it should be given in, given what's in the drawer
-// it returns the cash drawer with the change taken out of it
-
-// we're going to need to loop through the cid, keeping a running total of the change owed, until this total reaches zero
-
-// picture the function as a real cash register.
-// 1) the function is the cash register
-// 2) the cash drawer is a parameter along with price and change
-// ✔ calculate change owed - this will be cash minus price
-// 4) look through cash drawer from highest to lowest, until we find a denomination which is smaller than change, remove it from cash draw, take this away from change owed and push it into a change to give in cash array.
-
-// ✔ translate denomination from string to number so it can be compared to changeOwed
-// CONDITION
-// ✔ if changeOwed is equal to or greater than denomination...
-// ACTION
-// ✔ decrement changeOwed by cidNumberDenoms[i][0]
-// ✔ cidNumberDenoms[i][1] by cidNumberDenoms[i][0](to remove change from drawer)
-// ✔ push that value into change array(to give back to customer)
-
-// ✔ repeat this process until change owed is zero.
-// 7) take into account the other two possibilities(easy) with simple conditionals.
-
-// tip) console.log / check and record your values every step of the way to avoid silly errors
 
