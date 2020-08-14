@@ -1,6 +1,5 @@
 function checkCashRegister(price, cash, cid) {
   var changeOwed = cash - price;
-  console.log(`CHANGE OWED: ${changeOwed}`);
   var change = [];
 
   // cash in drawer
@@ -13,15 +12,11 @@ function checkCashRegister(price, cash, cid) {
   }
   cashInDrawer = cashInDrawer.toFixed(2);
 
-  console.log(`changeOwed: ${changeOwed}, cashInDrawer: ${cashInDrawer}, cid: ${cid}`)
-
   if (cashInDrawer < changeOwed) {
     return { status: "INSUFFICIENT_FUNDS", change: [] };
   } else if (cashInDrawer == changeOwed.toFixed(2)) {
     return { status: "CLOSED", change: cid };
   }
- 
-  // create function that converts result to correct format.
 
   // create new array translating denomination to number
   var cidNumberDenoms = cid;
@@ -37,11 +32,9 @@ function checkCashRegister(price, cash, cid) {
 
   // iterate backwards through the cash drawer
   for (var i = cidNumberDenoms.length - 1; i >= 0; i--) {
-    // ok
-    ///////////////////////////////////////////////////////////////////////////
-    var denomination = cidNumberDenoms[i][0]; // vars are ok
+    var denomination = cidNumberDenoms[i][0];
     var cashInSlot = cidNumberDenoms[i][1];
-    ///////////////////////////////////////////////////////////////////////////
+
     while (denomination <= changeOwed && cashInSlot > 0) {
       changeOwed -= denomination;
       changeOwed = changeOwed.toFixed(2);
@@ -49,14 +42,14 @@ function checkCashRegister(price, cash, cid) {
       change.push(denomination);
     }
   }
-  console.log(
-    `RESULT:: TOTAL ${change
-      .reduce((a, b) => a + b)
-      .toFixed(2)}, CHANGE ARRAY:${change}`
-  );
+
   var formattedResult = formatResult(change);
-  console.log({ status: "OPEN", change: formattedResult });
-  return { status: "OPEN", change: formattedResult };
+
+  if (formattedResult[0][1] < parseFloat(changeOwed)) {
+    return { status: "INSUFFICIENT_FUNDS", change: [] };
+  } else {
+    return { status: "OPEN", change: formattedResult };
+  }
 }
 
 function formatResult(change) {
@@ -112,11 +105,14 @@ function formatResult(change) {
   return result2;
 }
 
-// invoke
-
-// Return {status: "INSUFFICIENT_FUNDS", change: []} if cash-in-drawer is less than the change due, or if you cannot return the exact change.
-
-// Return {status: "CLOSED", change: [...]} with cash-in-drawer as the value for the key change if it is equal to the change due.
-
-checkCashRegister(19.5, 20, [["PENNY", 0.5], ["NICKEL", 0], ["DIME", 0], ["QUARTER", 0], ["ONE", 0], ["FIVE", 0], ["TEN", 0], ["TWENTY", 0], ["ONE HUNDRED", 0]])
-
+checkCashRegister(19.5, 20, [
+  ["PENNY", 0.01],
+  ["NICKEL", 0],
+  ["DIME", 0],
+  ["QUARTER", 0],
+  ["ONE", 1],
+  ["FIVE", 0],
+  ["TEN", 0],
+  ["TWENTY", 0],
+  ["ONE HUNDRED", 0],
+]);
