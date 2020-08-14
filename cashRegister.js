@@ -1,6 +1,9 @@
 function checkCashRegister(price, cash, cid) {
-  var changeOwed = cash - price; // 0.5
+  var changeOwed = cash - price;
+  console.log(`CHANGE OWED: ${changeOwed}`);
   var change = [];
+
+  // create function that converts result to correct format.
 
   // create new array translating denomination to number
   var cidNumberDenoms = cid;
@@ -30,20 +33,36 @@ function checkCashRegister(price, cash, cid) {
     ///////////////////////////////////////////////////////////////////////////
     var denomination = cidNumberDenoms[i][0]; // vars are ok
     var cashInSlot = cidNumberDenoms[i][1];
-    console.log(denomination, cashInSlot, changeOwed);
     ///////////////////////////////////////////////////////////////////////////
-    while (denomination <= changeOwed && cashInSlot >= changeOwed) {
+    while (denomination <= changeOwed && cashInSlot > 0) {
       changeOwed -= denomination;
+      changeOwed = changeOwed.toFixed(2);
+      console.log(`CHANGEOWED IS NOW ${changeOwed}`);
       cashInSlot -= denomination;
+      console.log(`CASHINSLOT IS NOW ${cashInSlot}`);
       change.push(denomination);
-      console.log(`CHANGE: ${change}`);
     }
   }
+  console.log(
+    `RESULT:: TOTAL ${change.reduce((a, b) => a + b)}, CHANGE ARRAY:${change}`
+  );
 }
 
 // cidNumberDenoms[i][0] == = all denominations equal to or less than change owed
 
 checkCashRegister(19.5, 20, [
+  ["PENNY", 1.01],
+  ["NICKEL", 2.05],
+  ["DIME", 3.1],
+  ["QUARTER", 4.25],
+  ["ONE", 90],
+  ["FIVE", 55],
+  ["TEN", 20],
+  ["TWENTY", 60],
+  ["ONE HUNDRED", 100],
+]);
+
+checkCashRegister(3.26, 100, [
   ["PENNY", 1.01],
   ["NICKEL", 2.05],
   ["DIME", 3.1],
@@ -71,11 +90,12 @@ checkCashRegister(19.5, 20, [
 // CONDITION
 // ✔ if changeOwed is equal to or greater than denomination...
 // ACTION
-// decrement changeOwed by cidNumberDenoms[i][0]
-// cidNumberDenoms[i][1] by cidNumberDenoms[i][0](to remove change from drawer)
-// push that value into change array(to give back to customer)
+// ✔ decrement changeOwed by cidNumberDenoms[i][0]
+// ✔ cidNumberDenoms[i][1] by cidNumberDenoms[i][0](to remove change from drawer)
+// ✔ push that value into change array(to give back to customer)
 
-// 6) repeat this process until change owed is zero.
+// ✔ repeat this process until change owed is zero.
 // 7) take into account the other two possibilities(easy) with simple conditionals.
 
 // tip) console.log / check and record your values every step of the way to avoid silly errors
+
